@@ -1,0 +1,146 @@
+未解决问题：
+问题： String phone=String.valueOf(request.getAttribute("phoneForDataPage"));
+	 System.out.println(phone);
+	 if(phone==null){
+			phone=request.getParameter("phone");
+			System.out.println(phone);
+		}
+		
+	控制台：null
+	描述：若phone为null，则应进入if语句中，被赋值或是仍旧输出另一个null；若不为null，则应输出一个值。因此不会出现只有一个null的情况；
+	猜想：可能phone==null判断条件有问题；
+	
+	
+	
+	
+	
+	
+	
+问题：在进行购票的某个步骤进行页面刷新，容易引起用户下线
+猜测：使用了session.setAttribute("film", null) ;session.setAttribute("filmComments", null) ;对session的Attribute进行初始化
+原因：因为使用了request.getRequestDispatcher().forword(),刷新时重载的URL跟本页面并不对应，因此导致出现错误；
+解决方案：---------	
+	
+
+
+
+
+
+
+
+
+座位表改进：
+
+①添加数组，可以用来存储个座位情况
+	impl中：
+	
+			public seatTable getseatTable(Integer movie_num) {
+				String sql="SELECT * FROM SEATTABLE WHERE  MOVIE_NUM_FK=?";
+				return get(sql,movie_num);
+			}
+
+	servlet中：
+	
+			session.setAttribute("seattable", seatTableForFilm);
+	
+	jsp中：
+	
+			<td class="t_3">
+  			<%
+  				if(seatTableForFilm.seatArray[1+10*i]==0){
+  			%>
+  			<a href="seatOrder.movies?seat=<%=1+10*i %>&film_num=<%=film.getMovie_num()%>&cinema_num=<%=film.getCinema_num_fk() %>&NewOrder_num=<%=request.getAttribute("NewOrder_num")%>"><%=1+10*i %></a>
+  			<% 	
+  				}else{
+  			%>
+  			该座位已被预定
+  			<%	
+  				}
+  			 %>
+  			</td 
+问题：从数据库获取的数据没法写入数组，因为在seatTable类中的含参构造函数中不能将值写给数组，需要一起在set方法中写入，但set方法只能初始化本身的变量
+	因此，添加数组的想法有问题，需要再去弄清楚从数据库获取数据放到变量的实现过程；
+	
+
+
+
+
+
+问题：链接数据库时总会出现异常，例如连接池过多，该跳转页面时无反应，无法进行删除操作等
+
+	
+	
+
+
+
+
+
+已解决问题：
+问题：personalData.jsp中的记录没有显示
+方案：页面java语言中的多个if语句作用域出错
+	新问题：删除评论出错
+	java.lang.NoSuchMethodException: 
+	com.mvc.servlet.personalDataServlet.deleteComment
+	(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+
+问题：购买电影过程出错--seat没写进数据库；
+	修改语句出错：INSERT INTO WHERE-->UPDATE SET 列名=列值,即应为修改记录而非写入记录
+
+问题：提交订单后返回personalDAta后可能出现情况——回到personalData后原来的记录消失
+原因：没有将信息设置成session的Attribute
+
+资料：①创建session时会在客户的浏览器添加一个叫JSESSIONID的cookie，只不过这个cookie的
+setAge(0),表示关闭浏览器的时候这个cookie失效。当在jsp中使用session对象的时候就会去取这个cookie值，
+然后和服务器的session.getId()想匹配，找到相应的session对象。刷新页面这个cookie应该还在，
+除非你的浏览器禁用了cookie。我猜应该就是你的浏览器禁用了cookie功能
+	②debug信息显示：每一次刷新都是连接服务器一次，而且上一次数据库连接查询尚未结束，新的一次连接已经启动。js是浏览器端的，session在服务器端 
+当刷新时，这时浏览器重新刷新当前URL，会重新链接服务器
+
+问题：数据源链接太多
+警告: com.mchange.v2.resourcepool.BasicResourcePool$ScatteredAcquireTask@5830ab -- Acquisition Attempt Failed!!! Clearing pending acquires. While trying to acquire a needed new resource, we failed to succeed more than the maximum number of allowed acquisition attempts (30). Last acquisition attempt exception: 
+com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Data source rejected establishment of connection,  message from server: "Too many connections"
+
+问题：添加评论时间到数据表中失败
+java中的Date数据写入数据库要使用Java.sql.Date类转换，可以直接写入数据库的date类型列中
+
+问题： submitPrice和seatOrder之间的传输已经做出修改，需要测试
+猜想：personalOrder类中的够构造函数更改后依旧出现单号初始化，导致与主键冲突
+原因：java中自然数型变量初始化默认值都为0，字符型变量未null，但并未与主键冲突，因为没有将默认值写入主键；
+	真正的原因是因为actors列设定的大小小于输入值，导致写入失败；
+
+问题：seatOrder中(NewOrder==null时跳回原页面后原session的Attribute消失---可能跟session与request关系有关
+解决方法，定义一个使原页面读取数据的语句，每次返回该页面都使用该语句，可起刷新作用
+
+问题：在wanna_see数据表中存在记录且actor列值不为null，但读取到wanna_see对象中时，actors值丢失；
+原因：数据表列名和对应类中的变量名要一致；并且set方法一定
+
+改进：在座位表里要显示已被预定的座位；回复评论页面设计
+评论页面设计：
+	在被回复的评论下插入form，用post方式上传评论并自动往内容中添加被回复用户名
+	
+		
+获取input值的顺：优先获取没被改变的默认值（value中的值），如果客户输入值，则获取输入的值；
+	
+request.getRequestDispatcher("/movies.jsp")欠缺forword()语句，不能转发；
+
+从movies页面来的订单信息以request.Attribute信息存储，转发后再转发回来是否会消失？不会
+
+  两种跳转传值方式
+   ① String succeed="succeed"; 
+    session.setAttribute("succeed111", succeed);
+  	response.sendRedirect("test");
+  	
+   ② if(request.getAttribute("succeed2")==null){
+  	String succeed2="succeed2"; 
+    request.setAttribute("succeed2", succeed2);
+    System.out.println("jsP:"+String.valueOf(request.getAttribute("succeed1"))+String.valueOf(request.getAttribute("succeed2")));
+  	request.getRequestDispatcher("test").forward(request, response);
+  	}else{
+  	System.out.println("jsP:"+String.valueOf(request.getAttribute("succeed1"))+String.valueOf(request.getAttribute("succeed2"))+"...end...");
+  	}
+  	
+ 空集判断应用.size属性
+ 
+问题：在personalData.jsp中修改用户信息时， 手机：<input type="text" name="phone" disabled="disabled" value="<%=customer.getPhone() %>"/><p>，Servlet无法用requset.getOParameter得到
+猜想：可能是因为除hidden外的value未经修改的input用request.getParameter得到的都是null
+解决方法：  用<input type="hidden" name="phoneForUpdate"  value="<%=customer.getPhone() %>"/>传递数据

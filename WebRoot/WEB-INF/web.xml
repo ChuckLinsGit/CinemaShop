@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>cinameProject</display-name>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>moviesServlet</servlet-name>
+    <servlet-class>com.mvc.servlet.moviesServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>city_cinemaServlet</servlet-name>
+    <servlet-class>com.mvc.servlet.city_cinemaServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>personalDataServlet</servlet-name>
+    <servlet-class>com.mvc.servlet.personalDataServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>testServlet</servlet-name>
+    <servlet-class>com.mvc.test.testServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>customerServlet</servlet-name>
+    <servlet-class>com.mvc.servlet.customerServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>validateCodeServlet</servlet-name>
+    <servlet-class>com.mvc.servlet.validateCodeServlet</servlet-class>
+  </servlet>
+ <servlet> 
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>turnServlet</servlet-name>
+    <servlet-class>com.mvc.servlet.turnServlet</servlet-class>
+  </servlet>
+
+ 
+
+
+
+
+
+  <servlet-mapping>
+    <servlet-name>moviesServlet</servlet-name>
+    <url-pattern>*.movies</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>city_cinemaServlet</servlet-name>
+    <url-pattern>*.cinema</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>personalDataServlet</servlet-name>
+    <url-pattern>*.data</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>testServlet</servlet-name>
+    <url-pattern>/test</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>customerServlet</servlet-name>
+    <url-pattern>*.cust</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>validateCodeServlet</servlet-name>
+    <url-pattern>*.validate</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+    <servlet-name>turnServlet</servlet-name>
+    <url-pattern>/turn</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
